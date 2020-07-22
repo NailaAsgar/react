@@ -1,30 +1,26 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { render } from "@testing-library/react";
-import {Card, CardImg, CardImgOverlay, CardTitle, CardBody, CardText} from 'reactstrap';
+import {Card, CardImg, CardImgOverlay, CardTitle} from 'reactstrap';
+import Dishdetail from '../components/DishdetailComponent';
+
 
 class Menu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedDish:null
+            selectedDish:null   //current state of selected-dish is null
         }
     }
     onDishSelect(dish) {
-        this.setState({selectedDish: dish})
+        this.setState({selectedDish: dish})    //modify the state of selected-dish
     }
-    renderDish(dish) {
+    renderDish(dish) {                    //if dish is selected
         if (dish!=null) {
             return (
-                <Card>
-                    <CardImg width="100%" src={dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
+                <Dishdetail value={dish}/>
             );
         }
-        else {
+        else {                       //if not selected
             return (
                 <div></div>
             );
@@ -32,7 +28,7 @@ class Menu extends React.Component {
     }
 
     render() {
-        const menu = this.props.dishes.map((dish) => {
+        const menu = this.props.dish.map((dish) => {            //iterate in all the dishes
             return(
                 <div key={dish.id} className="col-12 col-md-5 m-1">
                     <Card onClick={() => this.onDishSelect(dish)}>   
@@ -51,7 +47,7 @@ class Menu extends React.Component {
                     {menu}
                 </div>
                 <div class="row">
-                    {this.renderDish(this.state.selectedDish)}
+                    <Dishdetail dish = {this.state.selectedDish}/>
                 </div>
             </div>
         );
