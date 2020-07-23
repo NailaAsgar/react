@@ -1,13 +1,8 @@
 import React from 'react';
-import { render } from "@testing-library/react";
 import {Card, CardImg, CardImgOverlay, CardTitle, CardBody, CardText} from 'reactstrap';
 
 
-
-class Dishdetail extends React.Component {
-
-
-    renderDish(dish){
+    function RenderDish({dish}){        //userdefined components start with capital letter
         if(dish != null){
             return(
 
@@ -18,7 +13,6 @@ class Dishdetail extends React.Component {
                         <CardText>{dish.description}</CardText>
                     </CardBody>
                 </Card>
-
             )
         }
         else {
@@ -29,9 +23,9 @@ class Dishdetail extends React.Component {
     }
 
 
-    renderComments(comments) {
+    function RenderComments({comments}) {
         if (comments != null) {
-            const cmnts = this.props.dish.comments.map((comment) => {
+            const cmnts = this.props.dishes.comments.map((comment) => {
                 return (
                     <div key={comment.id}>
                         <p>{comment.comment}</p>
@@ -64,15 +58,15 @@ class Dishdetail extends React.Component {
         }
 
     }
-    render() {
+    const DishDetail = (props) => {
 
        return(
            <div className="container">
                <div className="row">
-                        {this.renderDish(this.props.dish)} 
+                    <RenderDish dish={props.dishes}/> 
                  
                     <div className ="col-12 col-md-5 m-1">
-                        {this.renderComments(this.props.dish)}
+                      <RenderComments comments={props.dishes}/>
                     </div>
                 </div>
            </div>
@@ -81,7 +75,6 @@ class Dishdetail extends React.Component {
        )
 
     }
-}
 
-export default Dishdetail;
+export default DishDetail;
 
