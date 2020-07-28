@@ -3,8 +3,8 @@ import { render } from "@testing-library/react";
 import {Card, CardImg, CardImgOverlay, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import {Link} from 'react-router-dom';
 
-    function RenderMenuItem({ dish}){    //we can clearly specify wat props parameters are needed.
-                                                // this.props is removed because onClick is coming as parameter
+    function RenderMenuItem({dish}){    //we can clearly specify wat props parameters are needed.
+                                                
         return(
             <Card> 
                 <Link to={`/menu/${dish.id}`} >    
