@@ -37,6 +37,7 @@ class Header extends React.Component {
         + "Remember: " +this.remember.checked);
         event.preventDefault();
     }
+    
     render() {
         return(
             <>    
