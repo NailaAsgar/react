@@ -1,7 +1,110 @@
 import React from 'react';
-import {Card, CardImg, CardImgOverlay, CardTitle, CardBody, CardText, BreadcrumbItem, Breadcrumb} from 'reactstrap';
+import {Card, CardImg, CardImgOverlay, CardTitle, CardBody, CardText, BreadcrumbItem, Breadcrumb, Label, Button,
+   Row, Col, ModalBody, ModalHeader, ModalFooter, Modal} from 'reactstrap';
+import {Control, LocalForm, Errors} from 'react-redux-form';
 import {Link} from "react-router-dom"
+import { render } from '@testing-library/react';
 
+
+const required = (val) => (val) && (val.length);
+const maxLength = (len) => (val) => !(val) || (val.length <=len);
+const minLength = (len) => (val) => (val) && (val.length >=len);
+
+
+
+export class CommentForm extends React.Component{
+
+    constructor(props) {
+        super(props);
+
+        this.toggleModal = this.toggleModal.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = {
+            isModalOpen: false
+        }
+    }
+
+    toggleModal() {
+        this.setState({
+            isModalOpen: !this.state.isModalOpen               //negating the value of isModalOpen, if its true it will be turned to false and vice versa
+        });
+    }
+
+    handleSubmit(values) {
+        console.log("Current State is:" + JSON.stringify(values)); 
+        alert("Current State is:" + JSON.stringify(values))
+    }
+
+
+    render() {
+        return (
+            <div>
+                <Button outline onClick={this.toggleModal}><span className="fa fa-write fa-lg">Submit Comment</span></Button>
+                 <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+                    <ModalBody>
+                    <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                            <Row className="form-group">
+                                <Label htmlFor="rating" md={2}>Rating</Label> 
+                                <Col>
+                                <Control.select model=".rating" name="rating"
+                                        className="form-control">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </Control.select>
+                                </Col>
+                            </Row>
+                            <Row className="form-group">
+                                <Label htmlFor="name" md={2}>Your Name</Label> 
+                                <Col md={10}>
+                                <Control.text model=".name" id="name" name="name"
+                                        placeholder="Your Name"
+                                        className="form-control"
+                                        validators ={{
+                                            required, 
+                                            minLength: minLength(3),
+                                            maxLength: maxLength(15)
+                                        }}
+                                         />
+                                    <Errors 
+                                            className="text-danger"
+                                            model=".name"
+                                            show="touched"
+                                            messages={{
+                                                required: "Required",
+                                                minLength: "Must be greater than 2 characters",
+                                                maxLength: "Must be 15 characters or less"
+                                            }}
+                                        />
+                                </Col>
+                            </Row>
+                            
+                            <Row className="form-group">
+                                <Label htmlFor="message" md={2}>Comment</Label> 
+                                <Col md={10}>
+                                <Control.textarea model=".message" id="message" name="message"
+                                        rows="6"
+                                        className="form-control" />
+                                </Col>
+                            </Row>
+                            <Row className="form-group">
+                                <Col md={{size:10, offset:2}}>
+                                    <Button type="submit" color="primary">
+                                        Submit
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+            </div>
+        );
+    }
+}
 
     function RenderDish({dish}){        //userdefined components start with capital letter
             return(
@@ -39,7 +142,8 @@ import {Link} from "react-router-dom"
                                 );
                             })}
                             
-                        </ul>
+                        </ul> 
+                       <CommentForm/> 
                     </div>
                 );
         else{
@@ -49,6 +153,9 @@ import {Link} from "react-router-dom"
         }
 
     }
+
+
+
     const DishDetail = (props) => {
         if(props.dish != null){
             return(
@@ -66,6 +173,7 @@ import {Link} from "react-router-dom"
                         <div className="row">
                             <RenderDish dish={props.dish}/> 
                             <RenderComments comments={props.comments}/>
+                            
                         </div>
                 </div>
             );
@@ -78,5 +186,7 @@ import {Link} from "react-router-dom"
 
     }
 
-export default DishDetail;
+export default DishDetail; 
+
+
 
