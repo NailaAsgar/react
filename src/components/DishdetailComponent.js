@@ -4,6 +4,7 @@ import {Card, CardImg, CardImgOverlay, CardTitle, CardBody, CardText, Breadcrumb
 import {Control, LocalForm, Errors} from 'react-redux-form';
 import {Link} from "react-router-dom"
 import { render } from '@testing-library/react';
+import {Loading} from './LoadingComponent';
 
 
 const required = (val) => (val) && (val.length);
@@ -32,8 +33,8 @@ export class CommentForm extends React.Component{
     }
 
     handleSubmit(values) {
-        console.log("Current State is:" + JSON.stringify(values)); 
-        alert("Current State is:" + JSON.stringify(values))
+        this.toggleModal();
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
 
@@ -120,7 +121,7 @@ export class CommentForm extends React.Component{
     }
 
 
-    function RenderComments({comments}) {
+    function RenderComments({comments, addComment, dishId}) {
         if (comments != null)
                 return (
                     <div className="col-12 col-md-5 m-1">
@@ -143,7 +144,7 @@ export class CommentForm extends React.Component{
                             })}
                             
                         </ul> 
-                       <CommentForm/> 
+                       <CommentForm dishId={dishId} addComment={addComment}/> 
                     </div>
                 );
         else{
@@ -157,7 +158,25 @@ export class CommentForm extends React.Component{
 
 
     const DishDetail = (props) => {
-        if(props.dish != null){
+        if(props.isLoading){
+            return (
+                <div className="container">
+                    <div className="row">
+                        <Loading />
+                    </div>  
+                </div>
+            );
+        }
+        else if (props.errMess) {
+            return(
+                <div className="container">
+                <div className="row">
+                    <h4>{props.errMess}</h4>
+                </div>  
+            </div>  
+            );
+        }
+        else if (props.dish != null)
             return(
                 <div className="container">
                     <div className="row">
@@ -172,18 +191,14 @@ export class CommentForm extends React.Component{
                         </div>
                         <div className="row">
                             <RenderDish dish={props.dish}/> 
-                            <RenderComments comments={props.comments}/>
+                            <RenderComments comments={props.comments}
+                                addComment={props.addComment}
+                                dishId={props.dish.id}/>
                             
                         </div>
                 </div>
             );
-        }
-        else {
-            return(
-                <div></div>
-            );  
-        }
-
+        
     }
 
 export default DishDetail; 
