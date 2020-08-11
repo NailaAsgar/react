@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { DISHES } from '../shared/dishes';
+import {baseUrl} from '../shared/baseUrl';
 
 export const addComment = (dishId, rating, author, comment) => ({
     type: ActionTypes.ADD_COMMENT,
@@ -15,9 +16,9 @@ export const fetchDishes = () => (dispatch) => {    //this is thunk
 
     dispatch(dishesLoading(true));
 
-    setTimeout(() => {
-        dispatch(addDishes(DISHES));
-    }, 2000);
+    return fetch(baseUrl + 'dishes')
+        .then(response => response.json())  //convert incoming response to json. it is a call back function
+        .then(dishes => dispatch(addDishes(dishes)));
 }
 
 export const dishesLoading = () => ({
@@ -32,4 +33,43 @@ export const dishesFailed = (errmess) => ({   //this is function which returns s
 export const addDishes = (dishes) => ({
     type: ActionTypes.ADD_DISHES,
     payload: dishes
+});
+
+export const fetchComments = () => (dispatch) => {    //this is thunk 
+    return fetch(baseUrl + 'comments')
+        .then(response => response.json())  //convert incoming response to json. it is a call back function
+        .then(comments => dispatch(addComments(comments)));
+}
+
+export const commentsFailed = (errmess) => ({
+    type: ActionTypes.COMMENTS_FAILED,
+    payload: errmess
+});
+
+export const addComments = (comments) => ({
+    type: ActionTypes.ADD_COMMENTS,
+    payload: comments
+});
+
+export const fetchPromos = () => (dispatch) => {
+    
+    dispatch(promosLoading());
+
+    return fetch(baseUrl + 'promotions')
+    .then(response => response.json())
+    .then(promos => dispatch(addPromos(promos)));
+}
+
+export const promosLoading = () => ({
+    type: ActionTypes.PROMOS_LOADING
+});
+
+export const promosFailed = (errmess) => ({
+    type: ActionTypes.PROMOS_FAILED,
+    payload: errmess
+});
+
+export const addPromos = (promos) => ({
+    type: ActionTypes.ADD_PROMOS,
+    payload: promos
 });
